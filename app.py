@@ -9,11 +9,11 @@ st.set_page_config(
 )
 
 # Tự động kiểm tra file ảnh để chống sập giao diện nếu thiếu file
-img_path = "IMAGE_0613.jpeg"
+img_path = "IMg_0613.jpeg"
 if os.path.exists(img_path):
     st.image(img_path)
 
-st.title("💰 App tính Thuế Thu Nhập Cá Nhân đề tài 6 Nguyễn Minh Khang")
+st.title("💰 TÍNH THUẾ THU NHẬP CÁ NHÂN_ĐỀ TÀI4_NGUYỄN GIA HUY")
 
 # 2. Nhập dữ liệu đầu vào
 thu_nhap = st.number_input(
