@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 
 # 1. Cấu hình trang giao diện
@@ -7,10 +8,14 @@ st.set_page_config(
     layout="centered"
 )
 
-# Chèn ảnh tiêu đề từ file của bạn
-st.title("💰 TÍNH THUẾ THU NHẬP CÁ NHÂN_ĐỀ TÀI 4 _NGUYỄN GIA HUY")
+# Tự động kiểm tra file ảnh để chống sập giao diện nếu thiếu file
 
-# 2. Nhập dữ liệu đầu vào (Giao diện nhập liệu trực quan)
+if os.path.exists(img_path):
+    st.image(img_path)
+
+st.title("💰 TÍNH THUẾ THU NHẬP CÁ NHÂN_ĐỀ TÀI4_NGUYỄN GIA HUY")
+
+# 2. Nhập dữ liệu đầu vào (Chỉ giữ lại ô nhập Thu nhập)
 thu_nhap = st.number_input(
     "Nhập thu nhập trước thuế (VNĐ):",
     min_value=0.0,
@@ -19,26 +24,15 @@ thu_nhap = st.number_input(
     format="%0.f"
 )
 
-nguoi_phu_thuoc = st.number_input(
-    "Nhập số người phụ thuộc:",
-    min_value=0,
-    value=0,
-    step=1
-)
-
 st.markdown("---")
 
-# 3. Xử lý tính toán (Hệ thống chạy ngầm tự động phản hồi khi thay đổi dữ liệu)
+# 3. Xử lý tính toán theo đúng quy tắc của bạn
 giam_tru_ban_than = 15_500_000
-giam_tru_phu_thuoc = nguoi_phu_thuoc * 6_200_000
-bao_hiem = thu_nhap * 0.105
 
-tong_giam_tru = giam_tru_ban_than + giam_tru_phu_thuoc + bao_hiem
+# Thu nhập tính thuế = Thu nhập - Tiền miễn trừ cá nhân
+thu_nhap_tinh_thue = max(0.0, thu_nhap - giam_tru_ban_than)
 
-# Thu nhập tính thuế
-thu_nhap_tinh_thue = max(0.0, thu_nhap - tong_giam_tru)
-
-# Tính thuế lũy tiến từng phần (7 bậc chuẩn theo dữ liệu của bạn)
+# Tính thuế lũy tiến từng phần (7 bậc) dựa trên Thu nhập tính thuế mới
 tax = 0
 if thu_nhap_tinh_thue <= 5_000_000:
     tax = thu_nhap_tinh_thue * 0.05
@@ -55,12 +49,13 @@ elif thu_nhap_tinh_thue <= 80_000_000:
 else:
     tax = 18_150_000 + (thu_nhap_tinh_thue - 80_000_000) * 0.35
 
-thu_nhap_sau_thue = thu_nhap - bao_hiem - tax
+# Thu nhập thực nhận sau khi trừ thuế
+thu_nhap_sau_thue = thu_nhap - tax
 
-# 4. Xuất kết quả ra màn hình UI chuyên nghiệp
+# 4. Xuất kết quả ra giao diện UI chuyên nghiệp
 st.subheader("📊 Kết quả tính toán")
 
-# Chia thành 3 cột hiển thị các thông số chính bằng st.metric
+# Chia làm 3 cột thông số trực quan
 col1, col2, col3 = st.columns(3)
 with col1:
     st.metric(label="Thu nhập tính thuế", value=f"{thu_nhap_tinh_thue:,.0f} đ")
@@ -71,16 +66,14 @@ with col3:
 
 st.markdown(" ")
 
-# Gom các thông tin chi tiết vào một bảng mở rộng (Expander) cho giao diện gọn gàng
-with st.expander("🔍 Xem chi tiết các khoản giảm trừ và chi phí"):
-    st.write(f"Thu nhập trước thuế: **{thu_nhap:,.0f} VNĐ**")
-    st.write(f"Giảm trừ bản thân: **{giam_tru_ban_than:,.0f} VNĐ**")
-    st.write(f"Giảm trừ người phụ thuộc: **{giam_tru_phu_thuoc:,.0f} VNĐ**")
-    st.write(f"Bảo hiểm bắt buộc (10.5%): **{bao_hiem:,.0f} VNĐ**")
-    st.write(f"Tổng các khoản được giảm trừ: **{tong_giam_tru:,.0f} VNĐ**")
+# Phần xem chi tiết phép tính khi cần bấm vào để mở rộng
+with st.expander("🔍 Xem chi tiết công thức áp dụng"):
+    st.write(f"Thu nhập của bạn: **{thu_nhap:,.0f} VNĐ**")
+    st.write(f"Mức miễn trừ cá nhân cố định: **{giam_tru_ban_than:,.0f} VNĐ**")
+    st.write(f"Thu nhập đem đi lũy tiến tính thuế: {thu_nhap:,.0f} - {giam_tru_ban_than:,.0f} = **{thu_nhap_tinh_thue:,.0f} VNĐ**")
 
-# Banner thông báo tổng kết dưới cùng
+# Hộp banner thông báo tổng kết dưới cùng
 if tax > 0:
-    st.success(f"Số thuế TNCN bạn cần nộp là **{tax:,.0f} VNĐ**. Thu nhập thực nhận (Net) của bạn là **{thu_nhap_sau_thue:,.0f} VNĐ**.")
+    st.success(f"Số thuế TNCN cần nộp là **{tax:,.0f} VNĐ**. Thu nhập thực nhận (Net): **{thu_nhap_sau_thue:,.0f} VNĐ**.")
 else:
-    st.info("Thu nhập của bạn chưa đến mức phải nộp thuế TNCN sau khi trừ các khoản giảm trừ và bảo hiểm.")
+    st.info("Thu nhập chưa vượt quá mức miễn trừ cá nhân 15.5 triệu. Bạn không cần phải nộp thuế.")
