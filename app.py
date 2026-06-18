@@ -7,7 +7,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. Định nghĩa hàm tính thuế của bạn
+# 2. Định nghĩa hàm tính thuế (giữ nguyên logic của bạn)
 def tinh_thue_tncn_chuan(tong_thu_nhap_vnd, muc_giam_tru_vnd=15_000_000):
     thu_nhap_tinh_thue_vnd = tong_thu_nhap_vnd - muc_giam_tru_vnd
     
@@ -32,43 +32,36 @@ def tinh_thue_tncn_chuan(tong_thu_nhap_vnd, muc_giam_tru_vnd=15_000_000):
 
 # 3. Tạo giao diện ứng dụng (UI)
 st.title("💰 Ứng Dụng Tính Thuế Thu Nhập Cá Nhân")
-st.write("Nhập thông tin thu nhập của bạn dưới đây để hệ thống tự động tính toán.")
+st.write("Nhập thu nhập của bạn để hệ thống tự động tính toán (Mức giảm trừ cố định: 15.000.000 VNĐ).")
 
-# Tạo các ô nhập liệu (thay thế cho hàm input())
+# Chỉ giữ lại duy nhất ô nhập Tổng thu nhập
 tong_thu_nhap = st.number_input(
     "Tổng thu nhập cá nhân / tháng (VNĐ):", 
     min_value=0.0, 
-    value=16_000_000.0,  # Giá trị mặc định gợi ý ban đầu
+    value=16_000_000.0,  # Giá trị hiển thị mẫu ban đầu
     step=500_000.0,
     format="%0.f"
 )
 
-muc_giam_tru = st.number_input(
-    "Mức giảm trừ cố định (VNĐ):", 
-    min_value=0.0, 
-    value=15_000_000.0,  # Mặc định theo logic của bạn
-    step=500_000.0,
-    format="%0.f"
-)
+# Cố định mức giảm trừ trong code, không hiển thị ra giao diện nữa
+MUC_GIAM_TRU_CO_DINH = 15_000_000
 
-# Thêm một đường kẻ ngang trang trí
 st.markdown("---")
 
-# 4. Xử lý tính toán và xuất kết quả ra màn hình (thay thế cho hàm print())
-thue_phai_nop = tinh_thue_tncn_chuan(tong_thu_nhap, muc_giam_tru)
-thu_nhap_tinh_thue = max(0.0, tong_thu_nhap - muc_giam_tru)
+# 4. Xử lý tính toán và xuất kết quả
+thue_phai_nop = tinh_thue_tncn_chuan(tong_thu_nhap, MUC_GIAM_TRU_CO_DINH)
+thu_nhap_tinh_thue = max(0.0, tong_thu_nhap - MUC_GIAM_TRU_CO_DINH)
 
 st.subheader("📊 Kết quả tính toán")
 
-# Hiển thị kết quả dạng thẻ thông số (Metrics) nhìn rất chuyên nghiệp
 col1, col2 = st.columns(2)
 with col1:
-    st.metric(label="Thu nhập tính thuế", value=f"{thu_nhap_tinh_thue:,.0f} VNĐ")
+    st.metric(label="Thu nhập tính thuế (Sau giảm trừ)", value=f"{thu_nhap_tinh_thue:,.0f} VNĐ")
 with col2:
     st.metric(label="Thuế TNCN phải nộp", value=f"{thue_phai_nop:,.0f} VNĐ")
 
-# Hiển thị dòng thông báo tổng kết bằng định dạng Success/Info của Streamlit
+# Thông báo trực quan
 if thue_phai_nop > 0:
     st.success(f"Tổng thu nhập: **{tong_thu_nhap:,.0f} VNĐ** -> Thuế phải nộp: **{thue_phai_nop:,.0f} VNĐ**")
 else:
-    st.info("Thu nhập của bạn sau giảm trừ bằng hoặc dưới 0. Bạn **không cần phải nộp thuế**.")
+    st.info("Thu nhập của bạn chưa vượt quá mức giảm trừ 15 triệu. Bạn **không cần phải nộp thuế**.")
