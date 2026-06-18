@@ -1,5 +1,5 @@
 import streamlit as st
-
+st.image(IMG_0613.jpeg)
 # 1. Cấu hình trang giao diện
 st.set_page_config(
     page_title="Tính Thuế TNCN", 
