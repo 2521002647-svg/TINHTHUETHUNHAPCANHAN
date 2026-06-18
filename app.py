@@ -9,12 +9,13 @@ st.set_page_config(
 )
 
 # Tự động kiểm tra file ảnh để chống sập giao diện nếu thiếu file
+img_path = "IMAGE_0613.jpeg"
+if os.path.exists(img_path):
+    st.image(img_path)
 
+st.title("💰 App tính Thuế Thu Nhập Cá Nhân đề tài 6 Nguyễn Minh Khang")
 
-
-st.title("💰 TÍNH THUẾ THU NHẬP CÁ NHÂN_ĐỀ TÀI4_NGUYỄN GIA HUY")
-
-# 2. Nhập dữ liệu đầu vào (Chỉ giữ lại ô nhập Thu nhập)
+# 2. Nhập dữ liệu đầu vào
 thu_nhap = st.number_input(
     "Nhập thu nhập trước thuế (VNĐ):",
     min_value=0.0,
@@ -23,13 +24,23 @@ thu_nhap = st.number_input(
     format="%0.f"
 )
 
+# Thêm lại ô nhập số người phụ thuộc
+nguoi_phu_thuoc = st.number_input(
+    "Nhập số người phụ thuộc:",
+    min_value=0,
+    value=0,
+    step=1
+)
+
 st.markdown("---")
 
-# 3. Xử lý tính toán theo đúng quy tắc của bạn
+# 3. Xử lý tính toán các khoản giảm trừ
 giam_tru_ban_than = 15_500_000
+giam_tru_phu_thuoc = nguoi_phu_thuoc * 6_200_000
+tong_giam_tru = giam_tru_ban_than + giam_tru_phu_thuoc
 
-# Thu nhập tính thuế = Thu nhập - Tiền miễn trừ cá nhân
-thu_nhap_tinh_thue = max(0.0, thu_nhap - giam_tru_ban_than)
+# Thu nhập tính thuế = Thu nhập - Giảm trừ bản thân - Giảm trừ người phụ thuộc
+thu_nhap_tinh_thue = max(0.0, thu_nhap - tong_giam_tru)
 
 # Tính thuế lũy tiến từng phần (7 bậc) dựa trên Thu nhập tính thuế mới
 tax = 0
@@ -65,14 +76,16 @@ with col3:
 
 st.markdown(" ")
 
-# Phần xem chi tiết phép tính khi cần bấm vào để mở rộng
+# Phần xem chi tiết phép tính khi người dùng muốn bấm mở rộng
 with st.expander("🔍 Xem chi tiết công thức áp dụng"):
     st.write(f"Thu nhập của bạn: **{thu_nhap:,.0f} VNĐ**")
     st.write(f"Mức miễn trừ cá nhân cố định: **{giam_tru_ban_than:,.0f} VNĐ**")
-    st.write(f"Thu nhập đem đi lũy tiến tính thuế: {thu_nhap:,.0f} - {giam_tru_ban_than:,.0f} = **{thu_nhap_tinh_thue:,.0f} VNĐ**")
+    st.write(f"Giảm trừ người phụ thuộc ({nguoi_phu_thuoc} người): **{giam_tru_phu_thuoc:,.0f} VNĐ**")
+    st.write(f"Tổng các khoản giảm trừ: **{tong_giam_tru:,.0f} VNĐ**")
+    st.write(f"Thu nhập tính thuế: {thu_nhap:,.0f} - {tong_giam_tru:,.0f} = **{thu_nhap_tinh_thue:,.0f} VNĐ**")
 
 # Hộp banner thông báo tổng kết dưới cùng
 if tax > 0:
     st.success(f"Số thuế TNCN cần nộp là **{tax:,.0f} VNĐ**. Thu nhập thực nhận (Net): **{thu_nhap_sau_thue:,.0f} VNĐ**.")
 else:
-    st.info("Thu nhập chưa vượt quá mức miễn trừ cá nhân 15.5 triệu. Bạn không cần phải nộp thuế.")
+    st.info("Thu nhập chưa vượt quá tổng mức giảm trừ (Bản thân + Người phụ thuộc). Bạn không cần phải nộp thuế.")
