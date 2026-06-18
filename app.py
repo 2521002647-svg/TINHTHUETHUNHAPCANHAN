@@ -1,15 +1,14 @@
 import streamlit as st
-st.image("IMAGE_0613.jpeg")
+
 # 1. Cấu hình trang giao diện
 st.set_page_config(
-    page_title="Tính Thuế TNCN - Đề tài 4", 
+    page_title="Tính Thuế TNCN - Đề tài 6", 
     page_icon="💰", 
     layout="centered"
 )
 
 # Chèn ảnh tiêu đề từ file của bạn
-
-st.title("💰 App tính Thuế Thu Nhập Cá Nhân_Đề Tài4_Nguyễn Gia Huy")
+st.title("💰 TÍNH THUẾ THU NHẬP CÁ NHÂN_ĐỀ TÀI 4 _NGUYỄN GIA HUY")
 
 # 2. Nhập dữ liệu đầu vào (Giao diện nhập liệu trực quan)
 thu_nhap = st.number_input(
