@@ -9,7 +9,7 @@ st.set_page_config(
 )
 
 # Tự động kiểm tra file ảnh để chống sập giao diện nếu thiếu file
-img_path = "IMg_0613.jpeg"
+img_path = "IMG_0613.jpeg"
 if os.path.exists(img_path):
     st.image(img_path)
 
