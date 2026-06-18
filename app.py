@@ -31,7 +31,7 @@ def tinh_thue_tncn_chuan(tong_thu_nhap_vnd, muc_giam_tru_vnd=15_500_000):
     return thue_trieu_dong * 1_000_000
 
 # 3. Tạo giao diện ứng dụng (UI)
-st.title("💰 Ứng Dụng Tính Thuế Thu Nhập Cá Nhân")
+st.title("💰 Ứng Dụng Tính Thuế Thu Nhập Cá Nhân_CA3_ĐỀ TÀI4_NGUYỄN GIA HUY")
 
 # Ô nhập Tổng thu nhập
 tong_thu_nhap = st.number_input(
