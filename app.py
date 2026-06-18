@@ -1,5 +1,5 @@
 import streamlit as st
-
+st.imgae("IMGAE_
 # 1. Cấu hình trang giao diện
 st.set_page_config(
     page_title="Tính Thuế TNCN_CA3_ĐỀ TÀI4_NGUYỄN GIA HUY", 
