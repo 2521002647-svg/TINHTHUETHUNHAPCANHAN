@@ -32,9 +32,8 @@ def tinh_thue_tncn_chuan(tong_thu_nhap_vnd, muc_giam_tru_vnd=15_000_000):
 
 # 3. Tạo giao diện ứng dụng (UI)
 st.title("💰 Ứng Dụng Tính Thuế Thu Nhập Cá Nhân")
-st.write("Nhập thu nhập của bạn để hệ thống tự động tính toán (Mức giảm trừ cố định: 15.000.000 VNĐ).")
 
-# Chỉ giữ lại duy nhất ô nhập Tổng thu nhập
+# Ô nhập Tổng thu nhập
 tong_thu_nhap = st.number_input(
     "Tổng thu nhập cá nhân / tháng (VNĐ):", 
     min_value=0.0, 
@@ -43,7 +42,7 @@ tong_thu_nhap = st.number_input(
     format="%0.f"
 )
 
-# Cố định mức giảm trừ trong code, không hiển thị ra giao diện nữa
+# Cố định mức giảm trừ trong code, chạy ngầm bên dưới
 MUC_GIAM_TRU_CO_DINH = 15_000_000
 
 st.markdown("---")
@@ -60,7 +59,7 @@ with col1:
 with col2:
     st.metric(label="Thuế TNCN phải nộp", value=f"{thue_phai_nop:,.0f} VNĐ")
 
-# Thông báo trực quan
+# Thông báo trực quan dưới cùng
 if thue_phai_nop > 0:
     st.success(f"Tổng thu nhập: **{tong_thu_nhap:,.0f} VNĐ** -> Thuế phải nộp: **{thue_phai_nop:,.0f} VNĐ**")
 else:
