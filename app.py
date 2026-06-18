@@ -1,5 +1,5 @@
 import streamlit as st
-st.image("IMG_0613.jpeg")
+
 # 1. Cấu hình trang giao diện
 st.set_page_config(
     page_title="Tính Thuế TNCN", 
@@ -7,8 +7,8 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. Định nghĩa hàm tính thuế (giữ nguyên logic của bạn)
-def tinh_thue_tncn_chuan(tong_thu_nhap_vnd, muc_giam_tru_vnd=15_000_000):
+# 2. Định nghĩa hàm tính thuế (Cập nhật mức giảm trừ mặc định thành 15.5 triệu)
+def tinh_thue_tncn_chuan(tong_thu_nhap_vnd, muc_giam_tru_vnd=15_500_000):
     thu_nhap_tinh_thue_vnd = tong_thu_nhap_vnd - muc_giam_tru_vnd
     
     if thu_nhap_tinh_thue_vnd <= 0:
@@ -42,8 +42,8 @@ tong_thu_nhap = st.number_input(
     format="%0.f"
 )
 
-# Cố định mức giảm trừ trong code, chạy ngầm bên dưới
-MUC_GIAM_TRU_CO_DINH = 15_000_000
+# Đã chỉnh lại mức giảm trừ mới tại đây
+MUC_GIAM_TRU_CO_DINH = 15_500_000
 
 st.markdown("---")
 
@@ -63,4 +63,4 @@ with col2:
 if thue_phai_nop > 0:
     st.success(f"Tổng thu nhập: **{tong_thu_nhap:,.0f} VNĐ** -> Thuế phải nộp: **{thue_phai_nop:,.0f} VNĐ**")
 else:
-    st.info("Thu nhập của bạn chưa vượt quá mức giảm trừ 15 triệu. Bạn **không cần phải nộp thuế**.")
+    st.info("Thu nhập của bạn chưa vượt quá mức giảm trừ 15.5 triệu. Bạn **không cần phải nộp thuế**.")
