@@ -10,8 +10,7 @@ st.set_page_config(
 
 # Tự động kiểm tra file ảnh để chống sập giao diện nếu thiếu file
 
-if os.path.exists(img_path):
-    st.image(img_path)
+
 
 st.title("💰 TÍNH THUẾ THU NHẬP CÁ NHÂN_ĐỀ TÀI4_NGUYỄN GIA HUY")
 
